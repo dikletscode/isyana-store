@@ -14,7 +14,7 @@ import (
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
-type Product struct {
+type product struct {
 	Id          string     `json:"id"`
 	Name        string     `json:"name"`
 	Description *string    `json:"description"`
@@ -29,17 +29,17 @@ type Product struct {
 
 type response struct {
 	Status string             `json:"status"`
-	Data   *Product           `json:"data"`
+	Data   *product           `json:"data"`
 	Errors *httperrors.Errors `json:"errors"`
 }
 
 type responseArr struct {
 	Status string             `json:"status"`
-	Data   []Product          `json:"data"`
+	Data   []product          `json:"data"`
 	Errors *httperrors.Errors `json:"errors"`
 }
 
-func postProduct(sellerId string, product Product) response {
+func postProduct(sellerId string, product product) response {
 	if len(product.Name) <= 5 || len(*product.Description) >= 200 || len(product.Name) >= 100 || product.Price < 100 || product.Price > 100000000 || product.Stock < 0 {
 		// log.Println(err.Error())
 		return response{
@@ -87,7 +87,7 @@ func postProduct(sellerId string, product Product) response {
 
 }
 
-func updateProduct(jwtId string, product Product) response {
+func updateProduct(jwtId string, product product) response {
 	if len(product.Id) <= 0 {
 		return response{
 			Status: "failed",
@@ -106,7 +106,7 @@ func updateProduct(jwtId string, product Product) response {
 			Data:   nil,
 			Errors: &httperrors.Errors{
 				Code:    400,
-				Message: "Bad Request: Product id is invalid",
+				Message: "Bad Request: product id is invalid",
 			},
 		}
 	}
@@ -188,7 +188,7 @@ func getProductById(sellerId string) response {
 		}
 	}
 
-	product, err := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByPos[Product])
+	product, err := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByPos[product])
 
 	if err != nil {
 		log.Println(err.Error())
@@ -254,7 +254,7 @@ func getProducts(categoryId string) responseArr {
 		}
 	}
 
-	product, err := pgx.CollectRows(rows, pgx.RowToStructByPos[Product])
+	product, err := pgx.CollectRows(rows, pgx.RowToStructByPos[product])
 
 	if err != nil {
 		log.Println(err.Error())

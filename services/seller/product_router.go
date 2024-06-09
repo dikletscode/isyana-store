@@ -19,9 +19,9 @@ func SellerRouter() {
 			jwtUserID, ok := claims["jti"].(string)
 
 			decoder := json.NewDecoder(r.Body)
-			var product Product
+			var incomingProduct product
 			var resp response
-			err := decoder.Decode(&product)
+			err := decoder.Decode(&incomingProduct)
 			if !ok || err != nil {
 				// Handle the case where "jti" is not a string
 				resp = response{
@@ -33,7 +33,7 @@ func SellerRouter() {
 					},
 				}
 			}
-			resp = postProduct(jwtUserID, product)
+			resp = postProduct(jwtUserID, incomingProduct)
 
 			if resp.Status == "success" {
 				w.WriteHeader(http.StatusCreated)
@@ -88,10 +88,10 @@ func SellerRouter() {
 			jwtUserID, ok := claims["jti"].(string)
 
 			decoder := json.NewDecoder(r.Body)
-			var product Product
-			product.Id = breakUrl[len(breakUrl)-1]
+			var incomingProduct product
+			incomingProduct.Id = breakUrl[len(breakUrl)-1]
 
-			err := decoder.Decode(&product)
+			err := decoder.Decode(&incomingProduct)
 			if !ok || err != nil {
 				// Handle the case where "jti" is not a string
 				resp = response{
@@ -103,7 +103,7 @@ func SellerRouter() {
 					},
 				}
 			}
-			resp = updateProduct(jwtUserID, product)
+			resp = updateProduct(jwtUserID, incomingProduct)
 
 			if resp.Status == "success" {
 				w.WriteHeader(http.StatusOK)

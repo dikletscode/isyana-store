@@ -13,7 +13,7 @@ import (
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
-type Order struct {
+type order struct {
 	Id             string    `json:"id"`
 	ProductId      string    `json:"product_id"`
 	UserId         *string   `json:"userId"`
@@ -27,17 +27,17 @@ type Order struct {
 
 type response struct {
 	Status string             `json:"status"`
-	Data   *Order             `json:"data"`
+	Data   *order             `json:"data"`
 	Errors *httperrors.Errors `json:"errors"`
 }
 
 type responseArr struct {
 	Status string             `json:"status"`
-	Data   []Order            `json:"data"`
+	Data   []order            `json:"data"`
 	Errors *httperrors.Errors `json:"errors"`
 }
 
-func addToOrder(newOrder Order) response {
+func addToOrder(newOrder order) response {
 	_, err := uuid.Parse(newOrder.ProductId)
 
 	if newOrder.Quantity <= 0 || err != nil {
@@ -185,7 +185,7 @@ func addToOrder(newOrder Order) response {
 	}
 
 }
-func updateOrder(newOrder Order) response {
+func updateOrder(newOrder order) response {
 	_, err := uuid.Parse(newOrder.Id)
 
 	if newOrder.Quantity <= 0 || err != nil {
@@ -269,7 +269,7 @@ func getMyOrders(userId string) responseArr {
 			},
 		}
 	}
-	product, err := pgx.CollectRows(rows, pgx.RowToStructByPos[Order])
+	product, err := pgx.CollectRows(rows, pgx.RowToStructByPos[order])
 
 	if err != nil {
 		log.Println(err.Error())
@@ -327,7 +327,7 @@ func getMyOrderById(userId string, orderId string) response {
 			},
 		}
 	}
-	product, err := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByPos[Order])
+	product, err := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByPos[order])
 
 	if err != nil {
 		log.Println(err.Error())

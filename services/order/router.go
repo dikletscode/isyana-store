@@ -19,9 +19,9 @@ func SellerRouter() {
 			jwtUserID, ok := claims["jti"].(string)
 
 			decoder := json.NewDecoder(r.Body)
-			var orderRequest Order
+			var incomingOrder order
 			var resp response
-			err := decoder.Decode(&orderRequest)
+			err := decoder.Decode(&incomingOrder)
 			if !ok || err != nil {
 				// Handle the case where "jti" is not a string
 				resp = response{
@@ -35,10 +35,10 @@ func SellerRouter() {
 			}
 			purchaseStatus := "IN_CART"
 			purchaseSource := "cart"
-			orderRequest.UserId = &jwtUserID
-			orderRequest.PurchaseStatus = purchaseStatus
-			orderRequest.PurchaseSource = purchaseSource
-			resp = addToOrder(orderRequest)
+			incomingOrder.UserId = &jwtUserID
+			incomingOrder.PurchaseStatus = purchaseStatus
+			incomingOrder.PurchaseSource = purchaseSource
+			resp = addToOrder(incomingOrder)
 
 			if resp.Status == "success" {
 				w.WriteHeader(http.StatusCreated)
@@ -107,11 +107,11 @@ func SellerRouter() {
 			jwtUserID, ok := claims["jti"].(string)
 
 			decoder := json.NewDecoder(r.Body)
-			var orderRequest Order
-			orderRequest.Id = breakUrl[len(breakUrl)-1]
-			orderRequest.UserId = &jwtUserID
+			var incomingOrder order
+			incomingOrder.Id = breakUrl[len(breakUrl)-1]
+			incomingOrder.UserId = &jwtUserID
 
-			err := decoder.Decode(&orderRequest)
+			err := decoder.Decode(&incomingOrder)
 			if !ok || err != nil {
 				// Handle the case where "jti" is not a string
 				resp = response{
@@ -123,7 +123,7 @@ func SellerRouter() {
 					},
 				}
 			}
-			resp = updateOrder(orderRequest)
+			resp = updateOrder(incomingOrder)
 
 			if resp.Status == "success" {
 				w.WriteHeader(http.StatusOK)
