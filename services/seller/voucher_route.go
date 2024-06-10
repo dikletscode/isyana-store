@@ -60,7 +60,7 @@ func VocuherRoute() {
 			return
 		}
 
-	})))
+	}), nil))
 
 	http.Handle("/voucher/", middleware.AuthMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPut {
@@ -110,6 +110,6 @@ func VocuherRoute() {
 			return
 		}
 
-	})))
+	}), nil))
 
 }

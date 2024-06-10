@@ -11,7 +11,7 @@ import (
 
 func SellerRouter() {
 	http.Handle("/product", middleware.AuthMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
 		if r.Method == http.MethodPost {
 
 			claims := middleware.UserFromContext(r.Context())
@@ -66,7 +66,7 @@ func SellerRouter() {
 			return
 		}
 
-	})))
+	}), []string{"GET"}))
 
 	http.Handle("/product/", middleware.AuthMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPut {
@@ -148,6 +148,6 @@ func SellerRouter() {
 			return
 		}
 
-	})))
+	}), nil))
 
 }

@@ -23,10 +23,21 @@ func UserFromContext(ctx context.Context) jwt.MapClaims {
 	claims := ctx.Value(userCtxKey).(jwt.MapClaims)
 	return claims
 }
-func AuthMiddleware(next http.Handler) http.Handler {
+func AuthMiddleware(next http.Handler, methodWhitelist []string) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
 		w.Header().Set("Content-Type", "application/json")
+		if len(methodWhitelist) >= 1 {
+			for _, method_white_list := range methodWhitelist {
+				if r.Method == method_white_list {
+					next.ServeHTTP(w, r)
+					return
+				}
+			}
+
+		}
+
 		headerAuth := r.Header.Get("Authorization")
 
 		var httpError *httperrors.Response

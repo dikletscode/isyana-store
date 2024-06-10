@@ -85,7 +85,7 @@ func SellerRouter() {
 			return
 		}
 
-	})))
+	}), nil))
 
 	http.Handle("/order/", middleware.AuthMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPut {
@@ -180,6 +180,6 @@ func SellerRouter() {
 			return
 		}
 
-	})))
+	}), nil))
 
 }

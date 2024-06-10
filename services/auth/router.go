@@ -100,7 +100,7 @@ func AuthRouters() {
 		if err != nil {
 			http.Error(w, "Oops! Something went wrong. We're working to fix the issue. Please try again later.", 500)
 		}
-	})))
+	}), nil))
 	http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
 		type Test struct {
 			name string
